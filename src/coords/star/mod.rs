@@ -7,7 +7,7 @@ use super::struct_types::*;
 
 /// A safe way to find the Altitude and Azimuth of a given Star
 #[allow(unused)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AltAz {
     dec: f64,
     lat: f64,

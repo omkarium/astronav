@@ -8,6 +8,8 @@ fn test_time_methods() {
     assert_eq!(133.6647976222448, time.gmst_in_degrees());
     assert_eq!(146.1147976222448, time.lmst_in_degrees(12.45));
     assert_eq!(9.740987, time.lmst_in_decimal_hours(12.45));
+    assert_eq!(133, time.day_of_year());
+
 
 }
 

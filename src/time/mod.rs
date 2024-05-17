@@ -60,6 +60,14 @@ pub fn lmst_in_degrees(gmst_in_deg: f64, longitude: f64) -> f64 {
     gmst_in_deg + longitude
 }
 
+/// Computes the day of the year
+pub fn day_of_year(year: u16, month: u8, day: u8) -> u16 {
+        let n1 = (275 * month as u16) / 9;
+        let n2 = ((month + 9) / 12) as u16 * (1 + ((year - 4 * (year / 4) + 2) / 3));
+        let n3 = 30_u16;
+        (n1 - n2 + day as u16 - n3).into()
+    }
+
 /**
  * Use this struct if do not wish to use free standing functions in the `time` module.
  **/
@@ -122,4 +130,10 @@ impl AstroTime {
     pub fn lmst_in_decimal_hours(&self, longitude: f64) -> f32 {
         (lmst_in_degrees(self.gmst_in_degrees(), longitude)/15.0) as f32
     }
+
+    /// Computes the day of the year
+    pub fn day_of_year(&self) -> u16 {
+       day_of_year(self.year, self.month, self.day)
+    }
+    
 }
