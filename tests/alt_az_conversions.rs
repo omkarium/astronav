@@ -1,4 +1,4 @@
-use astronav::coords::{DMSToDecimalDeg, HMSToDecimalDeg, star::AltAzBuilder};
+use astronav::coords::{dms_to_deg, hms_to_deg, star::AltAzBuilder};
 
 #[test]
 fn test_decimal_inputs() {
@@ -43,10 +43,10 @@ fn test_decimal_inputs() {
 fn test_non_decimal_inputs() {
     // Antares
     let alt = AltAzBuilder::new()
-        .dec(DMSToDecimalDeg("-26:29:11.8").try_into().unwrap())
-        .lat(DMSToDecimalDeg("12:27:0").try_into().unwrap())
-        .lmst(HMSToDecimalDeg("13:23:30").try_into().unwrap())
-        .ra(HMSToDecimalDeg("16:30:55.2").try_into().unwrap())
+        .dec(dms_to_deg("-26:29:11.8").unwrap())
+        .lat(dms_to_deg("12:27:0").unwrap())
+        .lmst(hms_to_deg("13:23:30").unwrap())
+        .ra(hms_to_deg("16:30:55.2").unwrap())
         .seal()
         .build();
 

@@ -68,14 +68,14 @@ impl AltAz {
 /// Similar to the above example if you do not have the property values in degrees, you can pass Degrees Minutes Seconds and Hour Minutes Seconds
 /// like below
 /// ```
-/// use astronav::coords::{star::AltAzBuilder, DMSToDecimalDeg, HMSToDecimalDeg};
+/// use astronav::coords::{star::AltAzBuilder, dms_to_deg, hms_to_deg};
 /// 
 /// // Values for Antares
 /// let alt = AltAzBuilder::new()
-///             .dec(DMSToDecimalDeg("-26:29:11.8").try_into().unwrap())
-///             .lat(DMSToDecimalDeg("12:27:0").try_into().unwrap())
-///             .lmst(HMSToDecimalDeg("13:23:30").try_into().unwrap())
-///             .ra(HMSToDecimalDeg("16:30:55.2").try_into().unwrap())
+///             .dec(dms_to_deg("-26:29:11.8").unwrap())
+///             .lat(dms_to_deg("12:27:0").unwrap())
+///             .lmst(hms_to_deg("13:23:30").unwrap())
+///             .ra(hms_to_deg("16:30:55.2").unwrap())
 ///             .seal()
 ///             .build();
 ///

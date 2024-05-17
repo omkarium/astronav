@@ -1,4 +1,4 @@
-use astronav::{coords::DMSToDecimalDeg, time::*};
+use astronav::{coords::dms_to_deg, time::*};
 
 #[test]
 fn test_time_methods() {
@@ -24,6 +24,6 @@ fn test_time_functions() {
 fn test_non_decimal_inputs_with_error() {
     assert_eq!(
         true,
-        <DMSToDecimalDeg<'_> as TryInto<f64>>::try_into(DMSToDecimalDeg("-26-29:11.8")).is_err()
+        dms_to_deg("-26-29:11.8").is_err()
     );
 }
