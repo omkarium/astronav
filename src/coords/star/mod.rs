@@ -1,4 +1,4 @@
-//! Positional Coordinates to track stars
+//! Track the Positional Coordinates of stars
 // Copyright (c) 2024 Venkatesh Omkaram
 
 use std::marker::PhantomData;

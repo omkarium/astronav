@@ -1,10 +1,16 @@
-//! All coordinates related
+//! All celestial coordinates related
 // Copyright (c) 2024 Venkatesh Omkaram
+#![deny(clippy::all)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 pub mod star;
 pub mod sun;
-pub mod noaa_sun;
 mod struct_types;
+
+#[cfg(feature = "noaa-sun")]
+#[cfg_attr(docsrs, doc(cfg(feature = "noaa-sun")))]
+pub mod noaa_sun;
+
 
 use std::num::ParseFloatError;
 
@@ -67,7 +73,7 @@ pub fn hms_to_deg(hms: &str) -> Result<f64, ParseFloatError> {
 }
 
 /**
- * function to convert Decimal Hours to Hours:Minutes:Seconds String
+ * function to convert Decimal Hours to `Hours:Minutes:Seconds` String
  * 
  * # Returns
  * * Hours Minutes Seconds as String in format *| "HH:MM:SS"* 
@@ -87,7 +93,7 @@ pub fn hours_to_hms(hours: f64) -> String {
 }
 
 /**
- * function to convert Decimal Hours to (Hours, Minutes, Seconds) tuple
+ * function to convert Decimal Hours to `(Hours, Minutes, Seconds)` tuple
  * 
  * # Returns
  * * Hours Minutes Seconds as a tuple in format *| (HH, MM, SS)* 
@@ -106,7 +112,7 @@ pub fn hours_to_hms_tuple(hours: f64) -> (u8, u8, f64) {
 }
 
 /**
- * function to convert Decimal Degrees to Degrees:Minutes:Seconds String
+ * function to convert Decimal Degrees to `Degrees:Minutes:Seconds` String
  * 
  * # Returns
  * * Degrees Minutes Seconds as String in format *| "DD:MM:SS"* 
@@ -126,7 +132,7 @@ pub fn deg_to_dms(deg: f64) -> String {
 }
 
 /**
- * function to convert Decimal Degrees to (Degrees, Minutes, Seconds) tuple
+ * function to convert Decimal Degrees to `(Degrees, Minutes, Seconds)` tuple
  * 
  * # Returns
  * * Degrees Minutes Seconds as a tuple in format *| (DD, MM, SS)* 

@@ -95,6 +95,7 @@ fn test_sun_set_in_new_york_using_setters() {
     )
 }
 
+#[cfg(feature = "noaa-sun")]
 mod noaa_sun {
     use astronav::coords::{hours_to_hms, noaa_sun::{equation_of_time, NOAASun}};
 

@@ -1,4 +1,4 @@
-//! Sun positional coordinates and time
+//! Track the Sun positional coordinates and time
 // Copyright (c) 2024 Venkatesh Omkaram
 
 // Sunrise/sunset calculation in squirrel, hugo@electricimp.com
@@ -19,10 +19,12 @@ pub enum SunMood {
     Set,
 }
 
-/// A Struct to find the Sun Rise, Sun Set and other items
+/// A Struct to find the Sun Rise, Sun Set and other items about the Sun
+/// 
+/// * Note: Checkout similar feature but using NOAA algorithms in `noaa_sun` module
 /// 
 /// # Example 1 - Sun Rise
-/// Calculating the Sun Properties for Rise on May 16th 2024, New York
+/// Calculating the Sun Positional Properties for the Rise on May 16th 2024, New York
 /// ```
 /// use astronav::coords::{sun::SunRiseAndSet, hours_to_hms};
 /// 
@@ -52,7 +54,7 @@ pub enum SunMood {
 /// By this we found that the sun rise occurred at 5:37:19.05 AM in New York on the given day
 /// 
 /// # Example 2 - Sun Set
-/// Calculating the Sun Properties for Set on May 16th 2024, New York
+/// Calculating the Sun Positional Properties for Set on May 16th 2024, New York
 /// ```
 /// use astronav::coords::{sun::SunRiseAndSet, hours_to_hms};
 /// 
@@ -129,19 +131,19 @@ impl SunRiseAndSet {
 
     pub fn date(self, year: u16, month: u8, day: u8) -> Self {
         let doy = day_of_year(year, month, day);
-        Self { doy, long: self.long, lat: self.lat, timezone: self.timezone }
+        Self { doy, ..self }
     }
 
     pub fn long(self, long: f32) -> Self {
-        Self { doy: self.doy, long, lat: self.lat, timezone: self.timezone }
+        Self { long, ..self }
     }
 
     pub fn lat(self, lat: f32) -> Self {
-        Self { doy: self.doy, long: self.long, lat, timezone: self.timezone }
+        Self { lat, ..self }
     }
 
     pub fn timezone(self, timezone: f32) -> Self {
-        Self { doy: self.doy, long: self.long, lat: self.lat, timezone }
+        Self { timezone, ..self }
     }
 
     pub fn sunrise_mean_anomaly(&self) -> f32 {

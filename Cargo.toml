@@ -2,21 +2,26 @@
 name = "astronav"
 version = "0.2.0"
 edition = "2021"
-description = "A rust library featuring algorithms for positional astronomy calculations"
+description = "A rust library featuring algorithms for positional astronomy"
 authors = ["Venkatesh Omkaram"]
 notices = ["Copyright (c) 2024 Venkatesh Omkaram"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/omkarium/astronav"
 homepage = "https://github.com/omkarium/astronav"
 readme = "README.md"
-keywords = ["astronomy"]
-categories = ["astronomy"]
+keywords = ["astronomy", "utility"]
+categories = ["science", "aerospace"]
 rust-version = "1.69.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
+[features]
+default = ["noaa-sun"]
+noaa-sun = []
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [profile.release]
 opt-level = 'z'
