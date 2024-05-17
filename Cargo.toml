@@ -1,6 +1,6 @@
 [package]
 name = "astronav"
-version = "0.2.0"
+version = "0.2.3"
 edition = "2021"
 description = "A rust library featuring algorithms for positional astronomy"
 authors = ["Venkatesh Omkaram"]
@@ -20,7 +20,7 @@ default = ["noaa-sun"]
 noaa-sun = []
 
 [package.metadata.docs.rs]
-all-features = true
+features = ["noaa-sun"]
 rustdoc-args = ["--cfg", "docsrs"]
 
 [profile.release]
