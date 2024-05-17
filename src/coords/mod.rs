@@ -3,6 +3,7 @@
 
 pub mod star;
 pub mod sun;
+pub mod noaa_sun;
 mod struct_types;
 
 use std::num::ParseFloatError;
