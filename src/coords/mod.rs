@@ -84,11 +84,11 @@ pub fn hms_to_deg(hms: &str) -> Result<f64, ParseFloatError> {
  * 
  * let a = hours_to_hms(5.6219597);
  * 
- * assert_eq!("5:37:19.054919999998816".to_owned(), a);
+ * assert_eq!("5:37:19.05487".to_owned(), a);
  * ```
 **/
-pub fn hours_to_hms(hours: f64) -> String {
-    let hms = format!("{}:{}:{}", hours.floor(), (hours.fract() * 60.0).floor(), (hours.fract() * 60.0).fract() * 60.0);
+pub fn hours_to_hms(hours: f32) -> String {
+    let hms = format!("{}:{}:{}", hours.floor(), (hours.fract() * 60.0).floor().abs(), (hours.fract() * 60.0).fract().abs() as f32 * 60.0);
     hms
 }
 
@@ -104,11 +104,11 @@ pub fn hours_to_hms(hours: f64) -> String {
  * 
  * let a = hours_to_hms_tuple(5.6219597);
  * 
- * assert_eq!((5,37,19.054919999998816), a);
+ * assert_eq!((5,37,19.05487), a);
  * ```
 **/
-pub fn hours_to_hms_tuple(hours: f64) -> (u8, u8, f64) {
-    (hours.floor() as u8, (hours.fract() * 60.0).floor() as u8, (hours.fract() * 60.0).fract() * 60.0)
+pub fn hours_to_hms_tuple(hours: f32) -> (u8, u8, f32) {
+    (hours.floor() as u8, (hours.fract() * 60.0).floor().abs() as u8, (hours.fract() * 60.0).fract().abs() as f32 * 60.0)
 }
 
 /**
@@ -123,11 +123,11 @@ pub fn hours_to_hms_tuple(hours: f64) -> (u8, u8, f64) {
  * 
  * let a = deg_to_dms(155.6219597);
  * 
- * assert_eq!("155:37:19.05491999996684".to_owned(), a);
+ * assert_eq!("155:37:19.068604".to_owned(), a);
  * ```
 **/
-pub fn deg_to_dms(deg: f64) -> String {
-    let dms = format!("{}:{}:{}", deg.floor(), (deg.fract() * 60.0).floor(), (deg.fract() * 60.0).fract() * 60.0);
+pub fn deg_to_dms(deg: f32) -> String {
+    let dms = format!("{}:{}:{}", deg.floor(), (deg.fract() * 60.0).floor().abs(), (deg.fract() * 60.0).fract().abs() as f32 * 60.0 );
     dms
 }
 
@@ -143,9 +143,29 @@ pub fn deg_to_dms(deg: f64) -> String {
  * 
  * let a = deg_to_dms_tuple(125.6219597);
  * 
- * assert_eq!((125,37,19.054920000018), a);
+ * assert_eq!((125,37,19.068604), a);
  * ```
 **/
-pub fn deg_to_dms_tuple(deg: f64) -> (u8, u8, f64) {
-    (deg.floor() as u8, (deg.fract() * 60.0).floor() as u8, (deg.fract() * 60.0).fract() * 60.0)
+pub fn deg_to_dms_tuple(deg: f32) -> (u8, u8, f32) {
+    (deg.floor() as u8, (deg.fract() * 60.0).floor().abs() as u8, (deg.fract() * 60.0).fract().abs() as f32 * 60.0)
+}
+
+
+/**
+ * function to convert Decimal Degrees to `Hours:Minutes:Seconds` String
+ * 
+ * # Returns
+ * * Hours Minutes Seconds as String in format *| "DD:MM:SS"* 
+ * 
+ * # Example
+ * ```
+ * use astronav::coords::deg_to_hms;
+ * 
+ * let a = deg_to_hms(5.2545);
+ * 
+ * assert_eq!("0:21:1.079979".to_owned(), a);
+ * ```
+**/
+pub fn deg_to_hms(deg: f32) -> String {
+    hours_to_hms(deg / 15.0)
 }

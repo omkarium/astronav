@@ -49,11 +49,11 @@ use crate::time::day_of_year;
 /// assert_eq!(16.3319240544742, sza);
 /// assert_eq!(73.6680759455258, alt);
 /// assert_eq!(294.4139960879158, saa);
-/// assert_eq!("5:42:43.974809411752176".to_owned(), hours_to_hms(sun_rise));
+/// assert_eq!("5:42:43.975525".to_owned(), hours_to_hms(sun_rise as f32));
 /// assert_eq!(342.73291349019587, sun_rise_mins);
-/// assert_eq!("12:5:1.952365544096324".to_owned(), hours_to_hms(sun_noon));
+/// assert_eq!("12:5:1.9523621".to_owned(), hours_to_hms(sun_noon as f32));
 /// assert_eq!(725.032539425735, sun_noon_mins);
-/// assert_eq!("18:27:19.929921676427682".to_owned(), hours_to_hms(sun_set));
+/// assert_eq!("18:27:19.9292".to_owned(), hours_to_hms(sun_set as f32));
 /// assert_eq!(1107.3321653612738, sun_set_mins);
 /// ```
 /// # Example 2
@@ -93,11 +93,11 @@ use crate::time::day_of_year;
 /// assert_eq!(16.3319240544742, sza);
 /// assert_eq!(73.6680759455258, alt);
 /// assert_eq!(294.4139960879158, saa);
-/// assert_eq!("5:42:43.974809411752176".to_owned(), hours_to_hms(sun_rise));
+/// assert_eq!("5:42:43.975525".to_owned(), hours_to_hms(sun_rise as f32));
 /// assert_eq!(342.73291349019587, sun_rise_mins);
-/// assert_eq!("12:5:1.952365544096324".to_owned(), hours_to_hms(sun_noon));
+/// assert_eq!("12:5:1.9523621".to_owned(), hours_to_hms(sun_noon as f32));
 /// assert_eq!(725.032539425735, sun_noon_mins);
-/// assert_eq!("18:27:19.929921676427682".to_owned(), hours_to_hms(sun_set));
+/// assert_eq!("18:27:19.9292".to_owned(), hours_to_hms(sun_set as f32));
 /// assert_eq!(1107.3321653612738, sun_set_mins);
 /// ```
 #[derive(Debug, Clone, Default)]
@@ -322,6 +322,10 @@ impl NOAASun {
         .acos();
 
         1440.0 - (4.0 * (long + ha.to_degrees())) - eot + (self.timezone as f64 * 60.0)
+    }
+
+    pub fn day_length(&self) -> f64 {
+        self.sunset_time_hours() - self.sunrise_time_hours()
     }
 }
 

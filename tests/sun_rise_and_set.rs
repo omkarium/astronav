@@ -27,8 +27,8 @@ fn test_sun_rise_in_new_york() {
     assert_eq!(16.748438, lha.unwrap());
     assert_eq!(5.6219597, *rising.as_ref().unwrap());
     assert_eq!(
-        "5:37:19.05487060546875".to_owned(),
-        hours_to_hms(rising.unwrap() as f64)
+        "5:37:19.05487".to_owned(),
+        hours_to_hms(rising.unwrap())
     )
 }
 
@@ -59,8 +59,8 @@ fn test_sun_set_in_new_york() {
     assert_eq!(7.25926, lha.unwrap());
     assert_eq!(20.133024, *setting.as_ref().unwrap());
     assert_eq!(
-        "20:7:58.887176513671875".to_owned(),
-        hours_to_hms(setting.unwrap() as f64)
+        "20:7:58.887177".to_owned(),
+        hours_to_hms(setting.unwrap())
     )
 }
 
@@ -80,6 +80,7 @@ fn test_sun_set_in_new_york_using_setters() {
     let lha = sun_new_york.sunset_local_ha_in_deg();
 
     let setting = sun_new_york.sunset_time();
+    
 
     // dbg!(sma); dbg!(stl); dbg!(ra); dbg!(dec); dbg!(lha.unwrap()); dbg!(setting.unwrap());
 
@@ -90,10 +91,28 @@ fn test_sun_set_in_new_york_using_setters() {
     assert_eq!(7.25926, lha.unwrap());
     assert_eq!(20.133024, *setting.as_ref().unwrap());
     assert_eq!(
-        "20:7:58.887176513671875".to_owned(),
-        hours_to_hms(setting.unwrap() as f64)
+        "20:7:58.887177".to_owned(),
+        hours_to_hms(setting.unwrap())
     )
 }
+
+#[test]
+fn test_day_length_new_york() {
+    // May 16th 2024
+    let sun_new_york = SunRiseAndSet::new()
+        .date(2024, 05, 16)
+        .long(-74.0060)
+        .lat(40.7128)
+        .timezone(-4.0);
+
+    let day_length = sun_new_york.day_length();
+    assert_eq!(
+        "14:30:39.832306".to_owned(),
+        hours_to_hms(day_length.unwrap())
+    )
+
+}
+
 
 #[cfg(feature = "noaa-sun")]
 mod noaa_sun {
@@ -128,6 +147,7 @@ mod noaa_sun {
         let sun_noon_mins = chennai_sun.noon_mins();
         let sun_set: f64 = chennai_sun.sunset_time_hours();
         let sun_set_mins: f64 = chennai_sun.sunset_time_mins();
+        let day_length: f64 = chennai_sun.day_length();
 
         assert_eq!(2.352617995823504, fy);
         assert_eq!(3.8842598773463117, eot);
@@ -136,12 +156,14 @@ mod noaa_sun {
         assert_eq!(16.3319240544742, sza);
         assert_eq!(73.6680759455258, alt);
         assert_eq!(294.4139960879158, saa);
-        assert_eq!("5:42:43.974809411752176".to_owned(), hours_to_hms(sun_rise));
+        assert_eq!("5:42:43.975525".to_owned(), hours_to_hms(sun_rise as f32));
         assert_eq!(342.73291349019587, sun_rise_mins);
-        assert_eq!("12:5:1.952365544096324".to_owned(), hours_to_hms(sun_noon));
+        assert_eq!("12:5:1.9523621".to_owned(), hours_to_hms(sun_noon as f32));
         assert_eq!(725.032539425735, sun_noon_mins);
-        assert_eq!("18:27:19.929921676427682".to_owned(), hours_to_hms(sun_set));
+        assert_eq!("18:27:19.9292".to_owned(), hours_to_hms(sun_set as f32));
         assert_eq!(1107.3321653612738, sun_set_mins);
+        assert_eq!(12.743320864517965, day_length);
+
     }
 
     #[test]

@@ -1,4 +1,4 @@
-use astronav::{coords::dms_to_deg, time::*};
+use astronav::{coords::{deg_to_dms, deg_to_hms, dms_to_deg, hours_to_hms, hours_to_hms_tuple}, time::*};
 
 #[test]
 fn test_time_methods() {
@@ -28,4 +28,14 @@ fn test_non_decimal_inputs_with_error() {
         true,
         dms_to_deg("-26-29:11.8").is_err()
     );
+}
+
+#[test]
+fn test_decimal_inputs() {
+    assert_eq!("-66:30:16.082153",deg_to_dms(-65.4878));
+    assert_eq!("12:29:16.07872",hours_to_hms(12.4878));
+    assert_eq!((5,37,19.05487), hours_to_hms_tuple(5.6219597));
+    assert_eq!("0:21:1.079979".to_owned(), deg_to_hms(5.2545));
+    assert_eq!("14:19:59.998856".to_owned(), deg_to_hms(215.0));
+
 }

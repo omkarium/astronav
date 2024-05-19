@@ -49,7 +49,7 @@ pub enum SunMood {
 /// assert_eq!(19.309036, dec);
 /// assert_eq!(16.748438, lha.unwrap());
 /// assert_eq!(5.6219597, *rising.as_ref().unwrap());
-/// assert_eq!("5:37:19.05487060546875".to_owned(), hours_to_hms(rising.unwrap() as f64));
+/// assert_eq!("5:37:19.05487".to_owned(), hours_to_hms(rising.unwrap()));
 /// ```
 /// By this we found that the sun rise occurred at 5:37:19.05 AM in New York on the given day
 /// 
@@ -79,7 +79,7 @@ pub enum SunMood {
 /// assert_eq!(19.42125, dec);
 /// assert_eq!(7.25926, lha.unwrap());
 /// assert_eq!(20.133024, *setting.as_ref().unwrap());
-/// assert_eq!("20:7:58.887176513671875".to_owned(), hours_to_hms(setting.unwrap() as f64));
+/// assert_eq!("20:7:58.887177".to_owned(), hours_to_hms(setting.unwrap()));
 /// ```
 /// By this we found that the sun set occurred at 20:7:58.88 PM in New York on the given day
 /// 
@@ -108,7 +108,7 @@ pub enum SunMood {
 /// assert_eq!(19.42125, dec);
 /// assert_eq!(7.25926, lha.unwrap());
 /// assert_eq!(20.133024, *setting.as_ref().unwrap());
-/// assert_eq!("20:7:58.887176513671875".to_owned(), hours_to_hms(setting.unwrap() as f64));
+/// assert_eq!("20:7:58.887177".to_owned(), hours_to_hms(setting.unwrap()));
 /// ```
 /// By this we found that the sun set occurred at 20:7:58.88 PM in New York on the given day
 #[derive(Debug, Clone, Default)]
@@ -258,6 +258,10 @@ impl SunRiseAndSet {
         };
 
         Ok(ut)
+    }
+
+    pub fn day_length(&self) -> Result<f32, SunMood> {
+        Ok(self.sunset_time()? - self.sunrise_time()?)
     }
 
     /// Sun Rise Right Ascension on the given day and location
