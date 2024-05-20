@@ -123,9 +123,10 @@ mod noaa_sun {
     fn test_frac_year() {
 
         // Test Sun rise, Sun set and other things for Chennai, India
+        // May 16th, doy 137
         let chennai_sun = NOAASun {
             year: 2024,
-            doy: 138,
+            doy: 137,
             long: 80.2705,
             lat: 13.0843,
             timezone: 5.5,
@@ -135,7 +136,7 @@ mod noaa_sun {
         };
 
         let fy = chennai_sun.frac_year_by_hour_in_rads();
-        let eot = chennai_sun.true_eot_in_mins();
+        let eot = chennai_sun.eot_in_mins();
         let dec = chennai_sun.declination();
         let ha = chennai_sun.ha_pos_time_in_deg();
         let sza = chennai_sun.zenith_in_deg();
@@ -149,20 +150,20 @@ mod noaa_sun {
         let sun_set_mins: f64 = chennai_sun.sunset_time_mins();
         let day_length: f64 = chennai_sun.day_length();
 
-        assert_eq!(2.352617995823504, fy);
-        assert_eq!(3.8842598773463117, eot);
-        assert_eq!(19.2872916085781, dec);
-        assert_eq!(15.741565152442035, ha);
-        assert_eq!(16.3319240544742, sza);
-        assert_eq!(73.6680759455258, alt);
-        assert_eq!(294.4139960879158, saa);
-        assert_eq!("5:42:43.975525".to_owned(), hours_to_hms(sun_rise as f32));
-        assert_eq!(342.73291349019587, sun_rise_mins);
-        assert_eq!("12:5:1.9523621".to_owned(), hours_to_hms(sun_noon as f32));
-        assert_eq!(725.032539425735, sun_noon_mins);
-        assert_eq!("18:27:19.9292".to_owned(), hours_to_hms(sun_set as f32));
-        assert_eq!(1107.3321653612738, sun_set_mins);
-        assert_eq!(12.743320864517965, day_length);
+        assert_eq!(2.3354508228530677, fy);
+        assert_eq!(3.5858528015263316, eot);
+        assert_eq!(19.05854859111103, dec);
+        assert_eq!(15.666963383487058, ha);
+        assert_eq!(16.25046545481053, sza);
+        assert_eq!(73.74953454518948, alt);
+        assert_eq!(294.3499381163224, saa);
+        assert_eq!("5:43:4.2178345".to_owned(), hours_to_hms(sun_rise as f32));
+        assert_eq!(343.0703082802986, sun_rise_mins);
+        assert_eq!("12:5:19.928741".to_owned(), hours_to_hms(sun_noon as f32));
+       assert_eq!(725.3321464660518, sun_noon_mins);
+        assert_eq!("18:27:35.63965".to_owned(), hours_to_hms(sun_set as f32));
+        assert_eq!(1107.593984651805, sun_set_mins);
+        assert_eq!(12.74206127285844, day_length);
 
     }
 

@@ -169,3 +169,5 @@ pub fn deg_to_dms_tuple(deg: f32) -> (u8, u8, f32) {
 pub fn deg_to_hms(deg: f32) -> String {
     hours_to_hms(deg / 15.0)
 }
+
+

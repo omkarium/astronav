@@ -66,7 +66,27 @@ pub fn day_of_year(year: u16, month: u8, day: u8) -> u16 {
         let n2 = ((month + 9) / 12) as u16 * (1 + ((year - 4 * (year / 4) + 2) / 3));
         let n3 = 30_u16;
         (n1 - n2 + day as u16 - n3).into()
+}
+
+/// Computes the fractional day of the year by the hour
+pub fn frac_day_of_year(year: u16, month: u8, day: u8, timezone: f32, hour: f32) -> f32 {
+    let days_in_year = if is_leap_year(year) {
+        366.0
+    } else {
+        365.0
+    };
+    let doy = day_of_year(year, month, day);
+    let fy = (doy as f32 / days_in_year) + (doy as f32 - 1.0) - (timezone/24.0) + (hour/24.0);
+    fy
+}
+
+pub fn is_leap_year(year: u16) -> bool {
+    if (year % 4 == 0 && !(year % 100 == 0)) || (year % 400 == 0) {
+        true
+    } else {
+        false
     }
+}
 
 /**
  * Use this struct if do not wish to use free standing functions in the `time` module.

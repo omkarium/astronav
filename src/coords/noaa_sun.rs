@@ -45,16 +45,16 @@ use crate::time::day_of_year;
 /// assert_eq!(2.352617995823504, fy);
 /// assert_eq!(3.8842598773463117, eot);
 /// assert_eq!(19.2872916085781, dec);
-/// assert_eq!(15.741565152442035, ha);
-/// assert_eq!(16.3319240544742, sza);
-/// assert_eq!(73.6680759455258, alt);
-/// assert_eq!(294.4139960879158, saa);
-/// assert_eq!("5:42:43.975525".to_owned(), hours_to_hms(sun_rise as f32));
-/// assert_eq!(342.73291349019587, sun_rise_mins);
-/// assert_eq!("12:5:1.9523621".to_owned(), hours_to_hms(sun_noon as f32));
-/// assert_eq!(725.032539425735, sun_noon_mins);
-/// assert_eq!("18:27:19.9292".to_owned(), hours_to_hms(sun_set as f32));
-/// assert_eq!(1107.3321653612738, sun_set_mins);
+/// assert_eq!(15.672467189913789, ha);
+/// assert_eq!(16.333412007549374, sza);
+/// assert_eq!(73.66658799245063, alt);
+/// assert_eq!(295.09538391733724, saa);
+/// assert_eq!("5:42:48.433685".to_owned(), hours_to_hms(sun_rise as f32));
+/// assert_eq!(342.80722219058515, sun_rise_mins);
+/// assert_eq!("12:5:18.606949".to_owned(), hours_to_hms(sun_noon as f32));
+/// assert_eq!(725.3101312403448, sun_noon_mins);
+/// assert_eq!("18:27:48.782043".to_owned(), hours_to_hms(sun_set as f32));
+/// assert_eq!(1107.8130402901043, sun_set_mins);
 /// ```
 /// # Example 2
 /// We will pass the same parameters as the above example, but using setters
@@ -89,16 +89,16 @@ use crate::time::day_of_year;
 /// assert_eq!(2.352617995823504, fy);
 /// assert_eq!(3.8842598773463117, eot);
 /// assert_eq!(19.2872916085781, dec);
-/// assert_eq!(15.741565152442035, ha);
-/// assert_eq!(16.3319240544742, sza);
-/// assert_eq!(73.6680759455258, alt);
-/// assert_eq!(294.4139960879158, saa);
-/// assert_eq!("5:42:43.975525".to_owned(), hours_to_hms(sun_rise as f32));
-/// assert_eq!(342.73291349019587, sun_rise_mins);
-/// assert_eq!("12:5:1.9523621".to_owned(), hours_to_hms(sun_noon as f32));
-/// assert_eq!(725.032539425735, sun_noon_mins);
-/// assert_eq!("18:27:19.9292".to_owned(), hours_to_hms(sun_set as f32));
-/// assert_eq!(1107.3321653612738, sun_set_mins);
+/// assert_eq!(15.672467189913789, ha);
+/// assert_eq!(16.333412007549374, sza);
+/// assert_eq!(73.66658799245063, alt);
+/// assert_eq!(295.09538391733724, saa);
+/// assert_eq!("5:42:48.433685".to_owned(), hours_to_hms(sun_rise as f32));
+/// assert_eq!(342.80722219058515, sun_rise_mins);
+/// assert_eq!("12:5:18.606949".to_owned(), hours_to_hms(sun_noon as f32));
+/// assert_eq!(725.3101312403448, sun_noon_mins);
+/// assert_eq!("18:27:48.782043".to_owned(), hours_to_hms(sun_set as f32));
+/// assert_eq!(1107.8130402901043, sun_set_mins);
 /// ```
 #[derive(Debug, Clone, Default)]
 pub struct NOAASun {
@@ -154,6 +154,18 @@ impl NOAASun {
     pub fn sec(self, sec: u8) -> Self {
         Self { sec, ..self }
     }
+
+    /// Computes the fractional day of the year by the hour
+    pub fn frac_day_of_year(&self) -> f32 {
+        let days_in_year = if is_leap_year(self.year) {
+            366.0
+        } else {
+            365.0
+        };
+        let doy = self.doy;
+        let fy = (doy as f32 / days_in_year) + (doy as f32 - 1.0) - (self.timezone/24.0) + (self.hour as f32/24.0);
+        fy
+    }
     
     /// Returns the fractional years in radians for a given year, day of the year, and the hour
     pub fn frac_year_by_hour_in_rads(&self) -> f64 {
@@ -163,7 +175,7 @@ impl NOAASun {
             365.0
         };
 
-        let fy = (2.0 * PI / days_in_year)
+        let fy = (2.0 * PI as f64 / days_in_year)
             * (self.doy as f64 - 1.0 + ((self.hour as f64 - 12.0) / 24.0));
         fy
     }
@@ -176,7 +188,7 @@ impl NOAASun {
             365.0
         };
 
-        let fy = (2.0 * PI / days_in_year) * (self.doy as f64 - 1.0);
+        let fy = (2.0 * PI as f64/ days_in_year) * (self.doy as f64 - 1.0);
         fy
     }
 
@@ -190,15 +202,39 @@ impl NOAASun {
         eot
     }
 
+    // /// Returns the equation of time in mins for a computed fractional year
+    // pub fn eot_in_mins(&self) -> f64 {
+    //     let eot = 229.18
+    //         * (0.000075 + (0.001868 * self.frac_year_by_day_in_rads().cos())
+    //             - (0.032077 * self.frac_year_by_day_in_rads().sin())
+    //             - (0.014615 * (2.0 * self.frac_year_by_day_in_rads()).cos())
+    //             - (0.040849 * (2.0 * self.frac_year_by_day_in_rads()).sin()));
+    //     eot
+    // }
+
     /// Returns the equation of time in mins for a computed fractional year
     pub fn eot_in_mins(&self) -> f64 {
-        let eot = 229.18
-            * (0.000075 + (0.001868 * self.frac_year_by_day_in_rads().cos())
-                - (0.032077 * self.frac_year_by_day_in_rads().sin())
-                - (0.014615 * (2.0 * self.frac_year_by_day_in_rads()).cos())
-                - (0.040849 * (2.0 * self.frac_year_by_day_in_rads()).sin()));
+        let n = 365.0 * (self.year as f64 - 2000.0) + self.doy as f64;
+        let mean_anomaly = 6.24004077 + 0.01720197 * n;
+        let eot = -7.659 * mean_anomaly.sin()
+            + 9.863 * ((2.0 * (6.24004077 + 0.01720197 * n) + 3.5932).sin());
+            
         eot
     }
+
+    // /// Returns the alternative equation of time in mins
+    // pub fn alt_eot_in_mins(&self) -> f64 {
+    //     let n = 360.0 / 365.24; // mean daily motion of earth
+    //     let a = (self.frac_day_of_year() + 9.0) * n;
+    //     let b = a + (1.914 * ((self.frac_day_of_year() - 3.0) * n).sin());
+    //     let c = (a - (b.tan() / 23.44_f32.cos()).atan()) / 180.0;
+    //     dbg!(n); dbg!(a);
+    //     dbg!(b);
+    //     dbg!(c);
+    //     dbg!(c - c.round_ties_even());
+    //     let eot = 720.0 * (c - c.round_ties_even());
+    //     a as f64
+    // }
 
     /// Sun's declination for a given fractional year calculated by hour
     pub fn true_declination(&self) -> f64 {
@@ -224,10 +260,21 @@ impl NOAASun {
         dec.to_degrees()
     }
 
+    // {\displaystyle \delta _{\odot }=-\arcsin \left[0.39779\cos \left(0.98565^{\circ }\left(N+10\right)+1.914^{\circ }\sin \left(0.98565^{\circ }\left(N-2\right)\right)\right)\right]}
+    /// Alternative Sun's declination for a given fractional day of the year
+    pub fn alt_true_declination(&self) -> f32 {
+        let frac_day_of_year = self.frac_day_of_year();
+        let a = 0.985653269 * (frac_day_of_year + 10.0);
+        let b = 1.913679036 * (0.985653269 * (frac_day_of_year - 2.0)).to_radians().sin();
+        let c = -(0.397776944 * (a + b).to_radians().cos()).asin();
+
+        c.to_degrees()
+    }
+
     /// Returns the Sun hour angle in degrees for a given longitude and time
     pub fn ha_pos_time_in_deg(&self) -> f64 {
         let time_offset =
-            self.true_eot_in_mins() + (4.0 * self.long as f64) - 60.0 * self.timezone as f64;
+            self.eot_in_mins() + (4.0 * self.long as f64) - 60.0 * self.timezone as f64;
         let true_solar_time = ((self.hour as u32 * 60) + self.min as u32 + (self.sec as u32 / 60))
             as f64
             + time_offset;
@@ -243,7 +290,7 @@ impl NOAASun {
 
     /// Returns the Zenith Angle of the sun for a given declination, latitude, and hour angle
     pub fn zenith_in_deg(&self) -> f64 {
-        let dec = self.true_declination();
+        let dec = self.alt_true_declination() as f64;
         let lat = self.lat as f64;
         let sza = ((lat.to_radians().sin() * dec.to_radians().sin())
             + (lat.to_radians().cos()
@@ -261,7 +308,7 @@ impl NOAASun {
 
     /// Returns the Azimuth angle of the sun for a given declination, latitude and zenith angle
     pub fn azimuth_in_deg(&self) -> f64 {
-        let dec = self.true_declination();
+        let dec = self.alt_true_declination() as f64;
         let lat = self.lat as f64;
         let sza = self.zenith_in_deg();
         let sha = self.ha_pos_time_in_deg();
@@ -290,7 +337,7 @@ impl NOAASun {
     }
 
     pub fn sunrise_time_mins(&self) -> f64 {
-        let dec = self.declination();
+        let dec = self.alt_true_declination() as f64;
         let lat = self.lat as f64;
         let long = self.long as f64;
         let eot = self.eot_in_mins();
@@ -311,7 +358,7 @@ impl NOAASun {
     }
 
     pub fn sunset_time_mins(&self) -> f64 {
-        let dec = self.declination();
+        let dec = self.alt_true_declination() as f64;
         let lat = self.lat as f64;
         let long = self.long as f64;
         let eot = self.eot_in_mins();
