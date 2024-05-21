@@ -16,7 +16,6 @@ rust-version = "1.69.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["noaa-sun"]
 noaa-sun = []
 
 [package.metadata.docs.rs]

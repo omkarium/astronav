@@ -116,7 +116,7 @@ fn test_day_length_new_york() {
 
 #[cfg(feature = "noaa-sun")]
 mod noaa_sun {
-    use astronav::coords::{hours_to_hms, noaa_sun::{equation_of_time, NOAASun}};
+    use astronav::coords::{deg_to_hms, hours_to_hms, noaa_sun::{equation_of_time, NOAASun}};
 
 
     #[test]
@@ -138,7 +138,8 @@ mod noaa_sun {
         let fy = chennai_sun.frac_year_by_hour_in_rads();
         let eot = chennai_sun.eot_in_mins();
         let dec = chennai_sun.declination();
-        let ha = chennai_sun.ha_pos_time_in_deg();
+        let ha = chennai_sun.ha_in_deg();
+        let ra = chennai_sun.ra_in_deg();
         let sza = chennai_sun.zenith_in_deg();
         let alt = chennai_sun.altitude_in_deg();
         let saa = chennai_sun.azimuth_in_deg();
@@ -154,6 +155,9 @@ mod noaa_sun {
         assert_eq!(3.5858528015263316, eot);
         assert_eq!(19.05854859111103, dec);
         assert_eq!(15.666963383487058, ha);
+        assert_eq!("1:2:40.071228".to_owned(), deg_to_hms(ha as f32));
+        assert_eq!(54.123246888232785, ra);
+        assert_eq!("3:36:29.578629".to_owned(), deg_to_hms(ra as f32));        
         assert_eq!(16.25046545481053, sza);
         assert_eq!(73.74953454518948, alt);
         assert_eq!(294.3499381163224, saa);

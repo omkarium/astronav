@@ -3,7 +3,7 @@
 
 use std::f64::consts::PI;
 
-use crate::time::day_of_year;
+use crate::time::{day_of_year, day_of_year_to_date, AstroTime};
 
 
 /// A Struct to find the Sun Rise, Sun Set and other items about the Sun using NOAA Algorithms
@@ -14,7 +14,7 @@ use crate::time::day_of_year;
 /// # Example 1
 /// Calculating the Sun Positional Properties on May 17th 2024, Chennai India
 /// ```
-/// use astronav::coords::{hours_to_hms, noaa_sun::NOAASun};
+/// use astronav::coords::{deg_to_hms, hours_to_hms, noaa_sun::NOAASun};
 /// 
 /// // Test Sun rise, Sun set and other things for Chennai, India
 /// let chennai_sun = NOAASun {
@@ -31,7 +31,8 @@ use crate::time::day_of_year;
 /// let fy = chennai_sun.frac_year_by_hour_in_rads();
 /// let eot = chennai_sun.true_eot_in_mins();
 /// let dec = chennai_sun.declination();
-/// let ha = chennai_sun.ha_pos_time_in_deg();
+/// let ha = chennai_sun.ha_in_deg();
+/// let ra = chennai_sun.ra_in_deg();
 /// let sza = chennai_sun.zenith_in_deg();
 /// let alt = chennai_sun.altitude_in_deg();
 /// let saa = chennai_sun.azimuth_in_deg();
@@ -46,6 +47,9 @@ use crate::time::day_of_year;
 /// assert_eq!(3.8842598773463117, eot);
 /// assert_eq!(19.2872916085781, dec);
 /// assert_eq!(15.672467189913789, ha);
+/// assert_eq!("1:2:41.392166".to_owned(), deg_to_hms(ha as f32));
+/// assert_eq!(55.10339045331051, ra);
+/// assert_eq!("3:40:24.813995".to_owned(), deg_to_hms(ra as f32));    
 /// assert_eq!(16.333412007549374, sza);
 /// assert_eq!(73.66658799245063, alt);
 /// assert_eq!(295.09538391733724, saa);
@@ -75,7 +79,7 @@ use crate::time::day_of_year;
 /// let fy = chennai_sun.frac_year_by_hour_in_rads();
 /// let eot = chennai_sun.true_eot_in_mins();
 /// let dec = chennai_sun.declination();
-/// let ha = chennai_sun.ha_pos_time_in_deg();
+/// let ha = chennai_sun.ha_in_deg();
 /// let sza = chennai_sun.zenith_in_deg();
 /// let alt = chennai_sun.altitude_in_deg();
 /// let saa = chennai_sun.azimuth_in_deg();
@@ -112,7 +116,7 @@ pub struct NOAASun {
     pub lat: f32,
     /// Timezone of the point of interest in hours (+ east, - west)
     pub timezone: f32,
-    /// Hour of of interest (24 hour format)
+    /// Hour of interest (24 hour format)
     pub hour: u8,
     /// Minute of interest
     pub min: u8,
@@ -261,7 +265,7 @@ impl NOAASun {
     }
 
     // {\displaystyle \delta _{\odot }=-\arcsin \left[0.39779\cos \left(0.98565^{\circ }\left(N+10\right)+1.914^{\circ }\sin \left(0.98565^{\circ }\left(N-2\right)\right)\right)\right]}
-    /// Alternative Sun's declination for a given fractional day of the year
+    /// Alternative Sun's declination for a given fractional day of the year (This is more accurate)
     pub fn alt_true_declination(&self) -> f32 {
         let frac_day_of_year = self.frac_day_of_year();
         let a = 0.985653269 * (frac_day_of_year + 10.0);
@@ -272,7 +276,7 @@ impl NOAASun {
     }
 
     /// Returns the Sun hour angle in degrees for a given longitude and time
-    pub fn ha_pos_time_in_deg(&self) -> f64 {
+    pub fn ha_in_deg(&self) -> f64 {
         let time_offset =
             self.eot_in_mins() + (4.0 * self.long as f64) - 60.0 * self.timezone as f64;
         let true_solar_time = ((self.hour as u32 * 60) + self.min as u32 + (self.sec as u32 / 60))
@@ -295,7 +299,7 @@ impl NOAASun {
         let sza = ((lat.to_radians().sin() * dec.to_radians().sin())
             + (lat.to_radians().cos()
                 * dec.to_radians().cos()
-                * self.ha_pos_time_in_deg().to_radians().cos()))
+                * self.ha_in_deg().to_radians().cos()))
         .acos();
 
         sza.to_degrees()
@@ -311,7 +315,7 @@ impl NOAASun {
         let dec = self.alt_true_declination() as f64;
         let lat = self.lat as f64;
         let sza = self.zenith_in_deg();
-        let sha = self.ha_pos_time_in_deg();
+        let sha = self.ha_in_deg();
 
         let saa: f64 = -(((lat.to_radians().sin() * sza.to_radians().cos())
             - dec.to_radians().sin())
@@ -373,6 +377,23 @@ impl NOAASun {
 
     pub fn day_length(&self) -> f64 {
         self.sunset_time_hours() - self.sunrise_time_hours()
+    }
+
+    pub fn ra_in_deg(&self) -> f64 {
+        let doy_to_date = day_of_year_to_date(self.year, self.doy);
+        let at = AstroTime { 
+            day: doy_to_date.1,
+            month: doy_to_date.0, 
+            year: self.year, 
+            hour: self.hour, 
+            min: self.min, 
+            sec: self.sec,
+            timezone: self.timezone 
+        };
+
+        let lst = at.lmst_in_degrees(self.long.into());
+        let ra = lst - self.ha_in_deg();
+        ra
     }
 }
 
