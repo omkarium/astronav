@@ -1,6 +1,49 @@
 //! Track the Positional Coordinates of stars
 // Copyright (c) 2024 Venkatesh Omkaram
-
+//!
+//!
+//! # Example 1
+//! 
+//! The star `Sirius` has the Right Ascension `101.5504` and declination `-16.75122`.
+//! You are the observer and the local mean sidereal time for your longitude is `199.05`.
+//! Your latitude is `12.45`. All the values are in degrees.
+//! 
+//! Using this information you can construct the AltAz type like the below and call on its getter methods
+//! ```
+//! use astronav::coords::star::AltAzBuilder;
+//! 
+//! let alt_az = AltAzBuilder::new()
+//!             .dec(-16.75122)
+//!             .lat(12.45)
+//!             .lmst(199.05)
+//!             .ra(101.5504)
+//!             .seal()
+//!             .build();
+//! 
+//! assert_eq!(-10.613191752481162, alt_az.get_altitude());
+//! assert_eq!(254.99375998808006, alt_az.get_azimuth());
+//! ```
+//! Notice that we are calling the seal() method on the AltAzBuilder only after setting all the setter properties.
+//! If you try to set a property say ra(70.2) after calling the seal(), that will result in a compiler error.
+//! 
+//! # Example 2
+//! Similar to the above example if you do not have the property values in degrees, you can pass Degrees Minutes Seconds and Hour Minutes Seconds
+//! like below
+//! ```
+//! use astronav::coords::{star::AltAzBuilder, dms_to_deg, hms_to_deg};
+//! 
+//! // Values for Antares
+//! let alt = AltAzBuilder::new()
+//!             .dec(dms_to_deg("-26:29:11.8").unwrap())
+//!             .lat(dms_to_deg("12:27:0").unwrap())
+//!             .lmst(hms_to_deg("13:23:30").unwrap())
+//!             .ra(hms_to_deg("16:30:55.2").unwrap())
+//!             .seal()
+//!             .build();
+//!
+//! assert_eq!(30.10106212143597, alt.get_altitude());
+//! assert_eq!(130.98870686438966, alt.get_azimuth());
+//! ```
 use std::marker::PhantomData;
 
 use super::struct_types::*;
@@ -40,48 +83,6 @@ impl AltAz {
 }
 
 /// Helps to build an AltAz type using a `builder pattern`
-/// # Example 1
-/// 
-/// The star `Sirius` has the Right Ascension `101.5504` and declination `-16.75122`.
-/// You are the observer and the local mean sidereal time for your longitude is `199.05`.
-/// Your latitude is `12.45`. All the values are in degrees.
-/// 
-/// Using this information you can construct the AltAz type like the below and call on its getter methods
-/// ```
-/// use astronav::coords::star::AltAzBuilder;
-/// 
-/// let alt_az = AltAzBuilder::new()
-///             .dec(-16.75122)
-///             .lat(12.45)
-///             .lmst(199.05)
-///             .ra(101.5504)
-///             .seal()
-///             .build();
-/// 
-/// assert_eq!(-10.613191752481162, alt_az.get_altitude());
-/// assert_eq!(254.99375998808006, alt_az.get_azimuth());
-/// ```
-/// Notice that we are calling the seal() method on the AltAzBuilder only after setting all the setter properties.
-/// If you try to set a property say ra(70.2) after calling the seal(), that will result in a compiler error.
-/// 
-/// # Example 2
-/// Similar to the above example if you do not have the property values in degrees, you can pass Degrees Minutes Seconds and Hour Minutes Seconds
-/// like below
-/// ```
-/// use astronav::coords::{star::AltAzBuilder, dms_to_deg, hms_to_deg};
-/// 
-/// // Values for Antares
-/// let alt = AltAzBuilder::new()
-///             .dec(dms_to_deg("-26:29:11.8").unwrap())
-///             .lat(dms_to_deg("12:27:0").unwrap())
-///             .lmst(hms_to_deg("13:23:30").unwrap())
-///             .ra(hms_to_deg("16:30:55.2").unwrap())
-///             .seal()
-///             .build();
-///
-/// assert_eq!(30.10106212143597, alt.get_altitude());
-/// assert_eq!(130.98870686438966, alt.get_azimuth());
-/// ```
 #[derive(Default, Clone)]
 pub struct AltAzBuilder<U, K, L, M, S> {
     dec: U,
