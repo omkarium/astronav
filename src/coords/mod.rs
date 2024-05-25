@@ -2,12 +2,12 @@
 //! 
 // Copyright (c) 2024 Venkatesh Omkaram
 
-//! `Coords` - short form for coordinates is a module which focuses on coordinate transformations of celestial bodies.
+//! `Coords` - short form for coordinates is a module which focuses on positional/coordinate transformations of celestial bodies.
 //! This module helps to track celestial bodies like the Sun, the stars etc. 
 //! 
 //! ## Finding A Star with Equatorial Coordinates
 //! In order to find or track the position of a Star from an observer's location by a latitude and longitude 
-//! we must know is also the RA (Right Ascension) and Dec (Declination) values of the Star. The RA and Dec belong to the 
+//! we must know the RA (Right Ascension) and Dec (Declination) values of the Star. The RA and Dec values belong to the 
 //! Equatorial coordinate system. You can go to the `star` module to see examples how to use the RA and Dec values.
 //! 
 //! ### Here are some RA and Dec values of some popular stars
