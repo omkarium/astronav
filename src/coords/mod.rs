@@ -105,7 +105,7 @@ pub fn hms_to_deg(hms: &str) -> Result<f64, ParseFloatError> {
  * function to convert Hours Minutes Seconds to `Degrees Minutes Seconds`
  * 
  * # Arguments
- * * Hours Minutes Seconds as &str in format *| "DD:MM:SS"* 
+ * * Hours Minutes Seconds as &str in format *| "HH:MM:SS"* 
  * `(note: HH must be in 24 hour format)`
  * 
  * # Example
@@ -126,7 +126,7 @@ pub fn hms_to_dms(hms: &str) -> Result<String, ParseFloatError> {
  * function to convert Hours Minutes Seconds to `(Degrees, Minutes, Seconds)` tuple
  * 
  * # Arguments
- * * Hours Minutes Seconds as &str in format *| "DD:MM:SS"* 
+ * * Hours Minutes Seconds as &str in format *| "HH:MM:SS"* 
  * `(note: HH must be in 24 hour format)`
  * 
  * # Example
@@ -227,7 +227,7 @@ pub fn deg_to_dms_tuple(deg: f32) -> (u8, u8, f32) {
  * function to convert Decimal Degrees to `Hours:Minutes:Seconds` String
  * 
  * # Returns
- * * Hours Minutes Seconds as String in format *| "DD:MM:SS"* 
+ * * Hours Minutes Seconds as String in format *| "HH:MM:SS"* 
  * 
  * # Example
  * ```

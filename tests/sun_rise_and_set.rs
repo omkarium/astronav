@@ -116,7 +116,7 @@ fn test_day_length_new_york() {
 
 #[cfg(feature = "noaa-sun")]
 mod noaa_sun {
-    use astronav::coords::{deg_to_hms, hours_to_hms, noaa_sun::{equation_of_time, NOAASun}};
+    use astronav::coords::{deg_to_hms, hours_to_hms, noaa_sun::{eot_in_mins_2, NOAASun}};
 
 
     #[test]
@@ -147,35 +147,35 @@ mod noaa_sun {
         let sun_rise_mins = chennai_sun.sunrise_time_mins();
         let sun_noon = chennai_sun.noon_hours();
         let sun_noon_mins = chennai_sun.noon_mins();
-        let sun_set: f64 = chennai_sun.sunset_time_hours();
-        let sun_set_mins: f64 = chennai_sun.sunset_time_mins();
-        let day_length: f64 = chennai_sun.day_length();
+        let sun_set = chennai_sun.sunset_time_hours();
+        let sun_set_mins = chennai_sun.sunset_time_mins();
+        let day_length = chennai_sun.day_length();
 
         assert_eq!(2.3354508228530677, fy);
-        assert_eq!(3.5858528015263316, eot);
-        assert_eq!(19.05854859111103, dec);
-        assert_eq!(15.666963383487058, ha);
-        assert_eq!("1:2:40.071228".to_owned(), deg_to_hms(ha as f32));
-        assert_eq!(54.123246888232785, ra);
-        assert_eq!("3:36:29.578629".to_owned(), deg_to_hms(ra as f32));        
-        assert_eq!(16.25046545481053, sza);
-        assert_eq!(73.74953454518948, alt);
-        assert_eq!(294.3499381163224, saa);
-        assert_eq!("5:43:4.2178345".to_owned(), hours_to_hms(sun_rise as f32));
-        assert_eq!(343.0703082802986, sun_rise_mins);
-        assert_eq!("12:5:19.928741".to_owned(), hours_to_hms(sun_noon as f32));
-       assert_eq!(725.3321464660518, sun_noon_mins);
-        assert_eq!("18:27:35.63965".to_owned(), hours_to_hms(sun_set as f32));
-        assert_eq!(1107.593984651805, sun_set_mins);
-        assert_eq!(12.74206127285844, day_length);
+        assert_eq!(3.6061869394507577, eot);
+        assert_eq!(19.251991, dec);
+        assert_eq!(15.672046917968146, ha);
+        assert_eq!("1:2:41.291313".to_owned(), deg_to_hms(ha as f32));
+        assert_eq!(54.1181633537517, ra);
+        assert_eq!("3:36:28.358917".to_owned(), deg_to_hms(ra as f32));        
+        assert_eq!(16.254976645690405, sza);
+        assert_eq!(73.7450233543096, alt);
+        assert_eq!(294.3440866717512, saa);
+        assert_eq!("5:43:2.9990387".to_owned(), hours_to_hms(sun_rise as f32));
+        assert_eq!(343.0499741423742, sun_rise_mins);
+        assert_eq!("12:5:18.709946".to_owned(), hours_to_hms(sun_noon as f32));
+        assert_eq!(725.3118123281274, sun_noon_mins);
+        assert_eq!("18:27:34.41742".to_owned(), hours_to_hms(sun_set as f32));
+        assert_eq!(1107.5736505138805, sun_set_mins);
+        assert_eq!(12.742061272858436, day_length);
 
     }
 
     #[test]
     fn test_eot() {
-        let year = 2024.0;
-        let day = 137.0; // Example day
-        let result = equation_of_time(year, day);
+        let year = 2024;
+        let day = 137; // Example day
+        let result = eot_in_mins_2(year, day);
         println!("Equation result: {}", result);
     }
 }
