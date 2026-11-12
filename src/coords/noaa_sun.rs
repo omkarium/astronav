@@ -46,13 +46,13 @@ use crate::time::{day_of_year, day_of_year_to_date, julian_day_number, julian_ti
 /// assert_eq!(2.352617995823504, fy);
 /// assert_eq!(3.575686249705328, eot);
 /// assert_eq!(19.4769, dec);
-/// assert_eq!(15.664421745531797, ha);
-/// assert_eq!("1:2:39.461403".to_owned(), deg_to_hms(ha as f32));
-/// assert_eq!(55.1114358976925, ra);
-/// assert_eq!("3:40:26.744385".to_owned(), deg_to_hms(ra as f32));    
-/// assert_eq!(16.32631546376095, sza);
-/// assert_eq!(73.67368453623905, alt);
-/// assert_eq!(295.10490876949734, saa);
+/// assert_eq!(15.860255078865123, ha);
+/// assert_eq!("1:3:26.46143".to_owned(), deg_to_hms(ha as f32));
+/// assert_eq!(54.915602564359176, ra);
+/// assert_eq!("3:39:39.745102".to_owned(), deg_to_hms(ra as f32));
+/// assert_eq!(16.49920705425353, sza);
+/// assert_eq!(73.50079294574647, alt);
+/// assert_eq!(294.8756634119244, saa);
 /// assert_eq!("5:42:50.36476".to_owned(), hours_to_hms(sun_rise as f32));
 /// assert_eq!(342.8394039681132, sun_rise_mins);
 /// assert_eq!("12:5:20.539856".to_owned(), hours_to_hms(sun_noon as f32));
@@ -93,10 +93,10 @@ use crate::time::{day_of_year, day_of_year_to_date, julian_day_number, julian_ti
 /// assert_eq!(2.352617995823504, fy);
 /// assert_eq!(3.575686249705328, eot);
 /// assert_eq!(19.4769, dec);
-/// assert_eq!(15.664421745531797, ha);
-/// assert_eq!(16.32631546376095, sza);
-/// assert_eq!(73.67368453623905, alt);
-/// assert_eq!(295.10490876949734, saa);
+/// assert_eq!(15.860255078865123, ha);
+/// assert_eq!(16.49920705425353, sza);
+/// assert_eq!(73.50079294574647, alt);
+/// assert_eq!(294.8756634119244, saa);
 /// assert_eq!("5:42:50.36476".to_owned(), hours_to_hms(sun_rise as f32));
 /// assert_eq!(342.8394039681132, sun_rise_mins);
 /// assert_eq!("12:5:20.539856".to_owned(), hours_to_hms(sun_noon as f32));
@@ -298,8 +298,8 @@ impl NOAASun {
     pub fn ha_in_deg(&self) -> f64 {
         let time_offset =
             self.eot_in_mins() + (4.0 * self.long as f64) - 60.0 * self.timezone as f64;
-        let true_solar_time = ((self.hour as u32 * 60) + self.min as u32 + (self.sec as u32 / 60))
-            as f64
+        let true_solar_time = ((self.hour as u32 * 60) + self.min as u32) as f64
+            + (self.sec as f64 / 60.0)
             + time_offset;
 
         let mut hour_angle = (true_solar_time / 4.0) - 180.0;
